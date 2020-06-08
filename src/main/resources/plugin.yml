@@ -1,6 +1,9 @@
 name: WorldCleaner
 main: ua.lokha.worldcleaner.Main
 version: ${project.version}
+commands:
+  worldcleaner:
+    permission: worldcleaner.command
 
 # Кодил это? Впиши себя сам
 authors: [lokha]
