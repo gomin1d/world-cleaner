@@ -37,11 +37,13 @@ public class CleanThread extends Thread {
 
     @SuppressWarnings("ConstantConditions")
     private void clean() {
-        for (File file : new File(world, "region").listFiles((dir, name) -> name.endsWith(".mca"))) {
+        int i = 0;
+        File[] regions = new File(world, "region").listFiles((dir, name) -> name.endsWith(".mca"));
+        for (File file : regions) {
             if (this.isInterrupted()) {
                 return;
             }
-            main.getLogger().info("Очищаем " + file);
+            main.getLogger().info("Очищаем " + file + " " + ++i + "/" + regions.length);
             int regionX;
             int regionZ;
             try {
