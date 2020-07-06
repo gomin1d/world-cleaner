@@ -38,7 +38,14 @@ public class CleanThread extends Thread {
     @SuppressWarnings("ConstantConditions")
     private void clean() {
         int i = 0;
-        File[] regions = new File(world, "region").listFiles((dir, name) -> name.endsWith(".mca"));
+        File regionDir = new File(world, "region");
+        if (!regionDir.exists()) {
+            File[] dims = world.listFiles(pathname -> pathname.isDirectory() && pathname.getName().startsWith("DIM"));
+            if (dims.length > 0) {
+                regionDir = new File(dims[0], "region");
+            }
+        }
+        File[] regions = regionDir.listFiles((dir, name) -> name.endsWith(".mca"));
         for (File file : regions) {
             if (this.isInterrupted()) {
                 return;

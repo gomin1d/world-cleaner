@@ -67,8 +67,14 @@ public class Main extends JavaPlugin {
             List<File> allWorlds = new ArrayList<>();
             String worldName = args[1];
             for (File world : Bukkit.getWorldContainer().listFiles(File::isDirectory)) {
-                File regionFir = new File(world, "region");
-                if (regionFir.exists() && regionFir.isDirectory()) {
+                File regionDir = new File(world, "region");
+                if (!regionDir.exists()) {
+                    File[] dims = world.listFiles(pathname -> pathname.isDirectory() && pathname.getName().startsWith("DIM"));
+                    if (dims.length > 0) {
+                        regionDir = new File(dims[0], "region");
+                    }
+                }
+                if (regionDir.exists() && regionDir.isDirectory()) {
                     allWorlds.add(world);
                 }
             }
@@ -141,8 +147,14 @@ public class Main extends JavaPlugin {
             List<String> suspend = new ArrayList<>();
             List<File> allWorlds = new ArrayList<>();
             for (File world : Bukkit.getWorldContainer().listFiles(File::isDirectory)) {
-                File regionFir = new File(world, "region");
-                if (regionFir.exists() && regionFir.isDirectory()) {
+                File regionDir = new File(world, "region");
+                if (!regionDir.exists()) {
+                    File[] dims = world.listFiles(pathname -> pathname.isDirectory() && pathname.getName().startsWith("DIM"));
+                    if (dims.length > 0) {
+                        regionDir = new File(dims[0], "region");
+                    }
+                }
+                if (regionDir.exists() && regionDir.isDirectory()) {
                     allWorlds.add(world);
                 }
             }

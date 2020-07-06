@@ -25,25 +25,31 @@ public class ParseArgs {
     public static ParseArgs parse(String[] args) {
         List<String> flags = Stream.of(args).filter(s -> s.startsWith("--")).collect(Collectors.toList());
 
-        File dir;
+        File world;
         if (args.length > 0) {
-            dir = new File(String.join(" ", Stream.of(args).filter(s -> !s.startsWith("--")).collect(Collectors.joining(" "))));
-            if (!dir.exists()) {
-                throw new RuntimeException("Папка " + dir + " не найдена.");
-            } else if (!dir.isDirectory()) {
-                throw new RuntimeException("Это не папка - " + dir + ".");
+            world = new File(String.join(" ", Stream.of(args).filter(s -> !s.startsWith("--")).collect(Collectors.joining(" "))));
+            if (!world.exists()) {
+                throw new RuntimeException("Папка " + world + " не найдена.");
+            } else if (!world.isDirectory()) {
+                throw new RuntimeException("Это не папка - " + world + ".");
             }
         } else {
-            dir = new File(".");
+            world = new File(".");
         }
 
-        List<File> files = new ArrayList<>(Arrays.asList(dir.listFiles(filter)));
-        File regionDir = new File(dir, "region");
+        List<File> files = new ArrayList<>(Arrays.asList(world.listFiles(filter)));
+        File regionDir = new File(world, "region");
+        if (!regionDir.exists()) {
+            File[] dims = world.listFiles(pathname -> pathname.isDirectory() && pathname.getName().startsWith("DIM"));
+            if (dims.length > 0) {
+                regionDir = new File(dims[0], "region");
+            }
+        }
         if (regionDir.exists() && regionDir.isDirectory()) {
             files.addAll(Arrays.asList(regionDir.listFiles(filter)));
         }
 
-        return new ParseArgs(dir, files, flags);
+        return new ParseArgs(world, files, flags);
     }
 
     public boolean hasFlag(String flag) {
