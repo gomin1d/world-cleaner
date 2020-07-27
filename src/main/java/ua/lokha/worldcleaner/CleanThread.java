@@ -46,6 +46,9 @@ public class CleanThread extends Thread {
             }
         }
         File[] regions = regionDir.listFiles((dir, name) -> name.endsWith(".mca"));
+        if (regions == null) {
+            regions = new File[0];
+        }
         for (File file : regions) {
             if (this.isInterrupted()) {
                 return;
